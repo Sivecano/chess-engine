@@ -112,18 +112,18 @@ namespace chess{
     {
         std::vector<int> out;
 
+        int front = pos + 8 * ((board[pos].colour == white) * 2 - 1);
 
-        if (board[pos + 8 * ((board[pos].colour == white) * 2 - 1)].type == none) out.push_back(pos + 8 * ((board[pos].colour == white) * 2 - 1));
+        if (board[front].type == none) out.push_back(front);
 
         for (int i = -1; i < 2; i += 2)
         {
             if (pos % 8 == 0 && i == -1) continue;
             if (pos % 8 == 7 && i == 1) continue;
-            if (((board[pos + 8 * ((board[pos].colour == white) * 2 - 1) + i].colour != board[pos].colour 
-                && board[pos + 8 * ((board[pos].colour == white) * 2 - 1) + i].type != none)) 
-                || ((pos + 8 * ((board[pos].colour == white) * 2 - 1) + i) == last_enpassant 
-                && board[last_enpassant_victim].colour != board[pos].colour)) 
-                out.push_back(pos + 8 * ((board[pos].colour == white) * 2 - 1) + i);
+            if (board[front + i].colour != board[pos].colour 
+                && (board[front + i].type != none
+                || (front + i) == last_enpassant )) 
+                out.push_back(front + i);
         }
 
         if (int(pos / 8) == ((board[pos].colour == black) * 5 + 1) 
@@ -131,7 +131,6 @@ namespace chess{
             out.push_back(pos + 16 * ((board[pos].colour == white) * 2 - 1));
 
         return out;
-
     }
 
     std::vector <int > knight_moves(int pos)
@@ -389,7 +388,7 @@ namespace chess{
 
         for (int i = 0; i < 64; i++)
         {
-            if (board[i].type = king)
+            if (board[i].type == king)
             {
                 kings[board[i].colour] = true;
             }
