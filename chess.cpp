@@ -380,6 +380,8 @@ namespace chess{
         board[rdest].colour = player;
         board[king].type = none;
         board[rook].type = none;
+
+        return true;
     }
 
     int win()
