@@ -8,15 +8,7 @@ namespace chess{
 
     const int worth[7] = {0, 1, 5, 3, 3, 9, 1000};
 
-    piece board[64];
-
-    int score[2];
-    
-    bool castling_moved[2][3]; // castling_moved[player][0: king, 1: rook1, 2: rook2]
-    int last_enpassant;
-    int last_enpassant_victim;
-
-    void init()
+    ChessGame::ChessGame()
     {
         for (int i = 0; i < 16; i++) board[i].colour = white;
         for (int i = 48; i < 64; i++ ) board[i].colour = black;
@@ -39,7 +31,12 @@ namespace chess{
 
     }
 
-    std::vector<int> rook_moves(int pos)
+    void ChessGame::init()
+    {
+        current_session = ChessGame();
+    }
+
+    std::vector<int> ChessGame::rook_moves(int pos)
     {
         std::vector<int> out;
         const int direction[4] {1, -1, 8, -8};
@@ -75,7 +72,7 @@ namespace chess{
         return out;
     }
 
-    std::vector<int> bishop_moves(int pos)
+    std::vector<int> ChessGame::bishop_moves(int pos)
     {
         std::vector<int> out;
         const int direction[4] {9, -7, -9, 7};
@@ -108,7 +105,7 @@ namespace chess{
         return out;
     }
 
-    std::vector <int > pawn_moves(int pos)
+    std::vector <int > ChessGame::pawn_moves(int pos)
     {
         std::vector<int> out;
 
@@ -133,7 +130,7 @@ namespace chess{
         return out;
     }
 
-    std::vector <int > knight_moves(int pos)
+    std::vector <int > ChessGame::knight_moves(int pos)
     {
         std::vector<int> out;
         const int knight_dirs[4] = {17, -15, 10, -6};
@@ -153,7 +150,7 @@ namespace chess{
         return out;
     }
 
-    std::vector <int > king_moves(int pos)
+    std::vector <int > ChessGame::king_moves(int pos)
     {
         std::vector<int> out;
         for(int i = -1; i < 2; i ++)
@@ -169,7 +166,7 @@ namespace chess{
         return out;
     }
 
-    bool threatened(int pos)
+    bool ChessGame::threatened(int pos)
     {   
         bool threatened = false;
         const int knight_dirs[4] = {17, -15, 10, -6};
@@ -210,7 +207,7 @@ namespace chess{
 
 
 
-    std::vector<int> moves(int pos)
+    std::vector<int> ChessGame::moves(int pos)
     {
         std::vector<int> out;
         std::vector<int> temp;
@@ -255,7 +252,7 @@ namespace chess{
     }
 
 
-    bool king_is_threatened(int colour)
+    bool ChessGame::king_is_threatened(int colour)
     {
         int king;
 
@@ -269,7 +266,7 @@ namespace chess{
         return threatened(king);
     }
 
-    bool legal(int colour, int from, int to)
+    bool ChessGame::legal(int colour, int from, int to)
     {
         if (colour != board[from].colour) return false;
         std::vector<int> possibles = moves(from);
@@ -299,7 +296,7 @@ namespace chess{
         return can_move;
     }
 
-    bool move(int player, int from, int to)
+    bool ChessGame::move(int player, int from, int to)
     {
         bool can_move = legal(player, from, to);
         if (!can_move) return false;
@@ -341,12 +338,12 @@ namespace chess{
         return  true;
     }
 
-    piece piece_at(int pos)
+    piece ChessGame::piece_at(int pos)
     {
         return board[pos];
     }
 
-    bool castling_possible(int player, int king, int rook)
+    bool ChessGame::castling_possible(int player, int king, int rook)
     {
         if (threatened(king)) return false;
         if (board[king].colour != player || board[rook].colour != player) return false;
@@ -362,7 +359,7 @@ namespace chess{
         return possible;
     }
 
-    bool castle (int player, int king, int rook)
+    bool ChessGame::castle (int player, int king, int rook)
     {
         if (!castling_possible(player, king, rook)) return false;
 
@@ -384,7 +381,7 @@ namespace chess{
         return true;
     }
 
-    int win()
+    int ChessGame::win()
     {
         bool kings[2] = {false, false};
 
